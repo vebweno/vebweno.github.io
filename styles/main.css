@@ -868,8 +868,8 @@ p {
 
 .preloader__logo__img {
   width: 2.25rem;
-  -webkit-filter: var(--filter-invert-false);
-  filter: var(--filter-invert-false);
+  /* -webkit-filter: var(--filter-invert-false);
+  filter: var(--filter-invert-false); */
 }
 
 .preloader__loadingBar {
