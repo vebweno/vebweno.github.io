@@ -28,6 +28,111 @@
 
   <!-- main style file -->
   <link rel="stylesheet" href="styles/main.css">
+
+  <!-- Include the email.js script-->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script is:inline type="text/javascript">
+    (function () {
+      // Replace 'YOUR_PUBLIC_KEY' with your actual public key
+      emailjs.init("D5dG2WNseYaBxDzSA");
+    })();
+
+    window.onload = function () {
+      console.log(document.getElementById("userName").value);
+      document
+        .getElementById("contact-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          var form = this; // Store a reference to the form
+          // Set values from input fields
+          form.user_name.value =
+            document.getElementById("userName").value;
+          form.user_email.value =
+            document.getElementById("userEmail").value;
+          form.contact_number.value =
+            document.getElementById("contactNumber").value;
+          form.message.value =
+            document.getElementById("messageByUser").value;
+
+          // Send the form using email.js
+          emailjs
+            .sendForm(
+              "service_kycdzm2",
+              "template_zpp2pht",
+              form
+            )
+            .then(
+              function () {
+                console.log("SUCCESS!");
+                // Clear the form fields on success
+                document.getElementById("userName").value =
+                  "";
+                document.getElementById("userEmail").value =
+                  "";
+                document.getElementById(
+                  "contactNumber"
+                ).value = "";
+                document.getElementById(
+                  "messageByUser"
+                ).value = "";
+              },
+              function (error) {
+                console.log("FAILED...", error);
+              }
+            );
+        });
+    };
+  </script>
+  <script is:inline>
+    function validateForm() {
+      var nameInput = document.getElementById("userName");
+      var emailInput = document.getElementById("userEmail");
+      var phoneInput = document.getElementById("contactNumber");
+      var messageTextarea = document.getElementById("messageByUser");
+
+      var emailPattern =
+        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      var isValid = true;
+
+      if (nameInput.value.trim() === "") {
+        document.getElementById("nameError").textContent =
+          "Name is required.";
+        nameInput.focus();
+        isValid = false;
+      } else {
+        document.getElementById("nameError").textContent = "";
+      }
+
+      if (!emailPattern.test(emailInput.value)) {
+        document.getElementById("emailError").textContent =
+          "Please enter a valid email address.";
+        emailInput.focus();
+        isValid = false;
+      } else {
+        document.getElementById("emailError").textContent = "";
+      }
+
+      if (phoneInput.value.trim() === "") {
+        document.getElementById("phoneError").textContent =
+          "Phone number is required.";
+        phoneInput.focus();
+        isValid = false;
+      } else {
+        document.getElementById("phoneError").textContent = "";
+      }
+
+      if (messageTextarea.value.trim() === "") {
+        document.getElementById("messageError").textContent =
+          "Message is required.";
+        messageTextarea.focus();
+        isValid = false;
+      } else {
+        document.getElementById("messageError").textContent = "";
+      }
+
+      return isValid;
+    }
+  </script>
 </head>
 
 <body>
@@ -99,8 +204,9 @@
               <!-- about me -->
               <div class="offCanvasMenu__about">
                 <p class="block-subTitle">We love making things simple, intuitive and expertly crafted!</p>
-                <h4 class="block-title">Product is the vital essence of what we do, a truly great product is born of meticulous planning and process. This is
-                where we specialized!</h4>
+                <h4 class="block-title">Product is the vital essence of what we do, a truly great product is born of
+                  meticulous planning and process. This is
+                  where we specialized!</h4>
               </div>
 
               <!-- contact info -->
@@ -116,7 +222,7 @@
                   <h4 class="block-title">Address</h4>
                   <ul>
                     <li>
-                    Edappal, Malappuram, Kerala, India
+                      Edappal, Malappuram, Kerala, India
                     </li>
                   </ul>
                 </li>
@@ -229,7 +335,7 @@
         <div class="container">
           <ul class="stats__items">
             <li class="stats__item">
-              <div class="stats__link" >
+              <div class="stats__link">
 
                 <!-- statistics icon -->
                 <div class="stats__iconWrapper">
@@ -248,7 +354,7 @@
               </div>
             </li>
             <li class="stats__item">
-              <div class="stats__link" >
+              <div class="stats__link">
 
                 <!-- statistics icon -->
                 <div class="stats__iconWrapper">
@@ -267,7 +373,7 @@
               </div>
             </li>
             <li class="stats__item">
-              <div class="stats__link" >
+              <div class="stats__link">
 
                 <!-- statistics icon -->
                 <div class="stats__iconWrapper">
@@ -1288,7 +1394,8 @@
 
           <!-- contact form -->
           <div class="contact__formHolder">
-            <form class="contact__form form-styled" data-url="contact_form.php"
+            <form id="contact-form" action="/submit" method="post" onsubmit="return validateForm()"
+              class="contact__form form-styled" data-url="contact_form.php"
               data-success-msg="Message sent successfully!"
               data-err-msg="Oops! something went wrong, please try again.">
 
@@ -1296,13 +1403,14 @@
               <div class="group">
                 <label>Name</label>
                 <div class="control has-prefix-icon">
-                  <input type="text" name="name" placeholder="e.g. John Doe" minlength="3" required>
+                  <input id="userName" type="text" name="user_name" placeholder="e.g. John Doe" minlength="3" required>
                   <i class="fa-solid fa-circle-user prefix-icon"></i>
 
                   <!-- validation errors messages -->
                   <div class="errors-msgs">
                     <input class="required" type="hidden" value="Name is required">
                     <input class="minLength" type="hidden" value="Name must be at least 3 characters">
+                    <span class="error" id="nameError"></span>
                   </div>
                 </div>
               </div>
@@ -1311,12 +1419,13 @@
               <div class="group">
                 <label>Email</label>
                 <div class="control has-prefix-icon">
-                  <input class="ltr-dir" type="email" inputmode="email" name="email"
+                  <input id="userEmail" type="email" name="user_email" class="ltr-dir" inputmode="email"
                     placeholder="e.g. john.doe@gmail.com" required>
                   <i class="fa-solid fa-envelope prefix-icon"></i>
 
                   <!-- validation errors messages -->
                   <div class="errors-msgs">
+                    <span class="error" id="emailError"></span>
                     <input class="required" type="hidden" value="Email is required">
                     <input class="invalid" type="hidden" value="Please enter a valid email address">
                   </div>
@@ -1327,11 +1436,12 @@
               <div class="group phone-number">
                 <label>Phone <span class="optional">(Optional)</span></label>
                 <div class="control has-prefix-icon">
-                  <input type="tel" inputmode="tel" name="phone" placeholder="Phone Number">
+                  <input id="contactNumber" type="tel" name="contact_number" inputmode="tel" placeholder="Phone Number">
                   <i class="fa-solid fa-phone prefix-icon"></i>
 
                   <!-- validation errors messages -->
                   <div class="errors-msgs">
+                    <span class="error" id="phoneError"></span>
                     <input class="invalid" type="hidden" value="Please enter a valid Phone Number">
                   </div>
                 </div>
@@ -1341,11 +1451,12 @@
               <div class="group">
                 <label>Message</label>
                 <div class="control has-prefix-icon">
-                  <textarea name="message" placeholder="Write message..." required></textarea>
+                  <textarea id="messageByUser" name="message" placeholder="Write message..." required></textarea>
                   <i class="fa-solid fa-comments prefix-icon"></i>
 
                   <!-- validation errors messages -->
                   <div class="errors-msgs">
+                    <span class="error" id="messageError"></span>
                     <input class="required" type="hidden" value="Message is required">
                   </div>
                 </div>
@@ -1354,8 +1465,7 @@
               <!-- submit button -->
               <div class="group">
                 <div class="control">
-                  <button class="submit-btn w-btn w-btn--s2 w-btn--dark" type="button"
-                    onclick="window._contactFormValidation(this)">Send</button>
+                  <button type="submit" id="submitButton" class="submit-btn w-btn w-btn--s2 w-btn--dark">Send</button>
                 </div>
               </div>
             </form>
@@ -1379,8 +1489,7 @@
 
           <!-- copyright -->
           <div class="footer__copyright">
-            &copy; 2024 Proudly Powered by <a href="/" 
-              rel="noopener">VebWeno</a>
+            &copy; 2024 Proudly Powered by <a href="/" rel="noopener">VebWeno</a>
           </div>
         </div>
       </div>
