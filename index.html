@@ -1394,7 +1394,7 @@
 
           <!-- contact form -->
           <div class="contact__formHolder">
-            <form id="contact-form" action="/submit" method="post" onsubmit="return validateForm()"
+            <form id="contact-form" action="/submit" method="post" onsubmit="return validateForm(), window._contactFormValidation(this)"
               class="contact__form form-styled" data-url="contact_form.php"
               data-success-msg="Message sent successfully!"
               data-err-msg="Oops! something went wrong, please try again.">
@@ -1434,9 +1434,9 @@
 
               <!-- phone control -->
               <div class="group phone-number">
-                <label>Phone <span class="optional">(Optional)</span></label>
+                <label>Phone </label>
                 <div class="control has-prefix-icon">
-                  <input id="contactNumber" type="tel" name="contact_number" inputmode="tel" placeholder="Phone Number">
+                  <input id="contactNumber" type="tel" name="contact_number" inputmode="tel" placeholder="Phone Number" required>
                   <i class="fa-solid fa-phone prefix-icon"></i>
 
                   <!-- validation errors messages -->
